@@ -6,6 +6,9 @@ import spidev
 
 from lib_nrf24 import NRF24   #import NRF24 library
 
+import sys
+
+
 
 GPIO.setmode(GPIO.BCM)       # set the gpio mode
 
