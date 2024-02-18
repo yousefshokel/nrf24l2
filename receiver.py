@@ -1,3 +1,5 @@
+sys.path.append('/home/pi/nrf24l/lib_nrf24')
+
 import RPi.GPIO as GPIO  # import gpio
 
 import time      #import time library
@@ -12,7 +14,7 @@ import sys
 
 GPIO.setmode(GPIO.BCM)       # set the gpio mode
 
-sys.path.append('/home/pi/nrf24l/lib_nrf24')
+
 
   # set the pipe address. this address shoeld be entered on the receiver alo
 
