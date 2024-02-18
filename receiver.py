@@ -1,4 +1,4 @@
-sys.path.append('/home/pi/nrf24l/lib_nrf24')
+sys.path.append('/home/pi/Yousef')
 
 import RPi.GPIO as GPIO  # import gpio
 
