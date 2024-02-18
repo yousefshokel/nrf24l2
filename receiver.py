@@ -9,6 +9,7 @@ from lib_nrf24 import NRF24   #import NRF24 library
 
 GPIO.setmode(GPIO.BCM)       # set the gpio mode
 
+sys.path.append('/home/pi/NRF24/lib_nrf24')
 
   # set the pipe address. this address shoeld be entered on the receiver alo
 
