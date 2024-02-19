@@ -8,9 +8,6 @@ radio = RF24(25,0)
 ce_pin = 25  # Replace with your GPIO pin
 csn_pin = 8   # Replace with your GPIO pin
 
-radio.setCEPin(ce_pin)
-radio.setCSNPin(csn_pin)
-
 # Set the radio channel and payload size
 radio.setChannel(0x76)
 radio.setPayloadSize(32)
