@@ -2,7 +2,7 @@
 from pyRF24 import RF24
 
 # Create an instance of the RF24 class
-radio = pyRF24()
+radio = RF24()
 
 # Setup the radio module
 radio.begin()
