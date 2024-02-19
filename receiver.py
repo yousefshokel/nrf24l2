@@ -15,7 +15,7 @@ from pyrf24 import RF24, RF24_PA_LOW
 
 radio = RF24(22, 0)
 
-radio.set_speed(RF24_SPEED_250KBPS)
+radio.setDataRate(RF24_250KBPS)
 # using the python keyword global is bad practice. Instead we'll use a 1 item
 # list to store our float number for the payloads sent
 payload = [0.0]
