@@ -4,8 +4,6 @@ from pyrf24 import RF24
 # Create an instance of the RF24 class
 radio = RF24(25,0)
 
-# Setup the radio module
-radio.begin()
 
 ce_pin = 25  # Replace with your GPIO pin
 csn_pin = 8   # Replace with your GPIO pin
