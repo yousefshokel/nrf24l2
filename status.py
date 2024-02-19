@@ -1,5 +1,5 @@
 import time
-from RF24 import *
+from pyrf24 import RF24, RF24_PA_LOW, RF24_250KBPS
 
 # Set up NRF24L01 radio
 radio = RF24.RF24(RF24.RPI_V2_GPIO_P1_22, RF24.BCM2835_SPI_CS0, RF24.BCM2835_SPI_SPEED_8MHZ)
