@@ -13,7 +13,7 @@ from pyrf24 import RF24, RF24_PA_LOW, RF24_250KBPS
 # CS Pin addresses the SPI bus number at /dev/spidev<a>.<b>
 # ie: RF24 radio(<ce_pin>, <a>*10+<b>); spidev1.0 is 10, spidev1.1 is 11 etc..
 
-radio = RF24(25, 0)
+radio = RF24(22, 0)
 
 #radio.setDataRate(RF24_250KBPS)
 # using the python keyword global is bad practice. Instead we'll use a 1 item
