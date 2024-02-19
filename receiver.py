@@ -2,7 +2,7 @@ import sys
 import argparse
 import time
 import struct
-from pyrf24 import RF24, RF24_PA_LOW
+from pyrf24 import RF24, RF24_PA_LOW, RF24_250KBPS
 
 
 ########### USER CONFIGURATION ###########
