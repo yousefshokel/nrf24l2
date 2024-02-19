@@ -1,34 +1,105 @@
-# Import the RF24 module
-from pyrf24 import RF24
+import sys
+import argparse
+import time
+import struct
+from pyrf24 import RF24, RF24_PA_LOW
 
-# Create an instance of the RF24 class
-radio = RF24(25,0)
+
+########### USER CONFIGURATION ###########
+# See https://github.com/TMRh20/RF24/blob/master/pyRF24/readme.md
+# Radio CE Pin, CSN Pin, SPI Speed
+# CE Pin uses GPIO number with BCM and SPIDEV drivers, other platforms use
+# their own pin numbering
+# CS Pin addresses the SPI bus number at /dev/spidev<a>.<b>
+# ie: RF24 radio(<ce_pin>, <a>*10+<b>); spidev1.0 is 10, spidev1.1 is 11 etc..
+radio = RF24(22, 0)
+
+# using the python keyword global is bad practice. Instead we'll use a 1 item
+# list to store our float number for the payloads sent
+payload = [0.0]
+
+# For this example, we will use different addresses
+# An address need to be a buffer protocol object (bytearray)
+address = [b"1Node", b"2Node"]
+# It is very helpful to think of an address as a path instead of as
+# an identifying device destination
+
+# to use different addresses on a pair of radios, we need a variable to
+# uniquely identify which address this radio will use to transmit
+# 0 uses address[0] to transmit, 1 uses address[1] to transmit
+radio_number = bool(
+    int(input("Which radio is this? Enter '0' or '1'. Defaults to '0' ") or 0)
+)
+
+# initialize the nRF24L01 on the spi bus
+if not radio.begin():
+    raise OSError("nRF24L01 hardware isn't responding")
+
+# set the Power Amplifier level to -12 dBm since this test example is
+# usually run with nRF24L01 transceivers in close proximity of each other
+radio.set_pa_level(RF24_PA_LOW)  # RF24_PA_MAX is default
+
+# set TX address of RX node into the TX pipe
+radio.open_tx_pipe(address[radio_number])  # always uses pipe 0
+
+# set RX address of TX node into an RX pipe
+radio.open_rx_pipe(1, address[not radio_number])  # using pipe 1
+
+# To save time during transmission, we'll set the payload size to be only what
+# we need. A float value occupies 4 bytes in memory using struct.calcsize()
+# "<f" means a little endian unsigned float
+radio.payload_size = struct.calcsize("<f")
+
+# for debugging
+radio.print_details()
 
 
-ce_pin = 25  # Replace with your GPIO pin
-csn_pin = 8   # Replace with your GPIO pin
+def master(count: int = 5):  # count = 5 will only transmit 5 packets
+    """Transmits an incrementing float every second"""
+    radio.listen = False  # ensures the nRF24L01 is in TX mode
 
-# Set the radio channel and payload size
-radio.setChannel(0x76)
-radio.setPayloadSize(32)
+    while count:
+        # use struct.pack() to pack your data into a usable payload
+        # into a usable payload
+        buffer = struct.pack("<f", payload[0])
+        # "<f" means a single little endian (4 byte) float value.
+        start_timer = time.monotonic_ns()  # start timer
+        result = radio.write(buffer)
+        end_timer = time.monotonic_ns()  # end timer
+        if not result:
+            print("Transmission failed or timed out")
+        else:
+            print(
+                "Transmission successful! Time to Transmit:",
+                f"{(end_timer - start_timer) / 1000} us. Sent: {payload[0]}",
+            )
+            payload[0] += 0.01
+        time.sleep(1)
+        count -= 1
 
-# Set the address for communication (both on transmitter and receiver)
-address = [0xAB, 0xCD, 0xEF, 0x01, 0x23]
-radio.openWritingPipe(address)
-radio.openReadingPipe(1, address)
 
-# Start listening for incoming data
-radio.startListening()
+def slave(timeout: int = 6):
+    """Polls the radio and prints the received value. This method expires
+    after 6 seconds of no received transmission."""
+    radio.listen = True  # put radio into RX mode and power up
 
-while True:
-    # Check if there is data available to read
-    if radio.available():
-        # Read the data
-        data = radio.read(32)
-        print("Received data:", data.decode('utf-8'))
+    start = time.monotonic()
+    while (time.monotonic() - start) < timeout:
+        has_payload, pipe_number = radio.available_pipe()
+        if has_payload:
+            length = radio.payload_size  # grab the payload length
+            # fetch 1 payload from RX FIFO
+            received = radio.read(length)  # also clears radio.irq_dr status flag
+            # expecting a little endian float, thus the format string "<f"
+            # received[:4] truncates padded 0s in case dynamic payloads are disabled
+            payload[0] = struct.unpack("<f", received[:4])[0]
+            # print details about the received packet
+            print(f"Received {length} bytes on pipe {pipe_number}: {payload[0]}")
+            start = time.monotonic()  # reset the timeout timer
 
-# Cleanup when the script ends
-radio.end()
+    # recommended behavior is to keep in TX mode while idle
+    radio.listen = False  # put the nRF24L01 is in TX mode
+
 
 
 
