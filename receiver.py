@@ -1,8 +1,8 @@
 # Import the RF24 module
-from pyRF24 import RF24
+from pyrf24 import RF24
 
 # Create an instance of the RF24 class
-radio = RF24()
+radio = RF24(25,0)
 
 # Setup the radio module
 radio.begin()
