@@ -1,4 +1,4 @@
-from pyrf24 import RF24
+from pyrf24 import RF24, RF24_250KBPS
 
 
 radio = RF24(22,0)
