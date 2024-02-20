@@ -5,7 +5,7 @@ from pyrf24 import RF24
 #GPIO.setup(22, GPIO.OUT)
 
 
-radio = RF24(22,0)
+radio = RF24(22,24)
 radio.begin()
 radio.print_details()
 #GPIO.cleanup()
