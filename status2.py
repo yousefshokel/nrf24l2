@@ -1,5 +1,5 @@
-from pyrf24 import NRF24
+from pyrf24 import RF24
 
 
-radio = NRF24(25,0)
+radio = RF24(25,0)
 radio.print_details()
