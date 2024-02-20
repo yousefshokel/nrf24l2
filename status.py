@@ -1,22 +1,15 @@
-import time
-from pyrf24 import RF24, RF24_PA_LOW, RF24_250KBPS
+from nrf24 import NRF24
 
-# Set up NRF24L01 radio
-radio = RF24(22,0)
+def get_nrf24_status():
+    # Create an NRF24 object
+    radio = NRF24()
 
-def setup_radio():
-    radio.begin()
-    radio.printDetails()
+    # Initialize the radio with CE=0, CSN=0, and channel 76
+    radio.begin(22, 8, 76)
 
-def get_status():
+    # Retrieve and print the status
     status = radio.get_status()
-    print(f"NRF24L01 Status: {status}")
+    print(f"NRF24L01 Status: 0x{status:02X}")
 
 if __name__ == "__main__":
-    try:
-        setup_radio()
-        get_status()
-    except KeyboardInterrupt:
-        print("Program terminated by user.")
-    finally:
-        radio.powerDown()
+    get_nrf24_status()
