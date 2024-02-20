@@ -2,7 +2,7 @@ from pyrf24 import RF24
 import RPi.GPIO as GPIO
 
 GPIO.setmode(GPIO.BOARD)
-#GPIO.setup(22, GPIO.OUT)
+GPIO.setup(22, GPIO.OUT)
 
 
 radio = RF24(22,0)
