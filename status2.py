@@ -1,7 +1,7 @@
 from pyrf24 import RF24
 import RPi.GPIO as GPIO
 
-#GPIO.cleanup()
+GPIO.cleanup()
 
 #GPIO.setmode(GPIO.BOARD)
 #GPIO.setup()
