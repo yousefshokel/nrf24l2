@@ -12,7 +12,7 @@ address = [0xF0F0F0F0E1]
 
 radio.begin()
 radio.openReadingPipe(pipe, address[0])
-radio.setDataRate(RF24_1MBPS)
+radio.setDataRate(RF24_250KBPS)
 radio.startListening()
 
 print("Receiver is ready to receive messages...")
